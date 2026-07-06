@@ -51,7 +51,7 @@ export async function exportPdf(entries: EntryComputedRow[], periodLabel: string
     head: [EXPORT_COLUMNS.map((c) => c.label)],
     body: toRows(entries),
     styles: { fontSize: 7 },
-    headStyles: { fillColor: [42, 120, 214] },
+    headStyles: { fillColor: [255, 102, 0] },
   });
 
   doc.save(`telehealth-report-${Date.now()}.pdf`);
