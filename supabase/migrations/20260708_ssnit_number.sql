@@ -15,6 +15,11 @@
 -- Uncomment if you only have test/dummy entries and want a clean slate:
 -- truncate table public.telemedicine_entries restart identity cascade;
 
+-- Must drop first: the existing view was built with `select e.*`, and
+-- Postgres won't let ALTER TABLE ... RENAME COLUMN cascade through a view's
+-- star-expanded output column automatically (error 42P16). Recreated below.
+drop view if exists public.v_entries_computed;
+
 alter table public.telemedicine_entries rename column patient_full_name to ssnit_number;
 
 alter table public.telemedicine_entries
