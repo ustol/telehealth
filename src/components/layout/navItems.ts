@@ -25,7 +25,7 @@ export function getNavItems(roles: RoleName[]): NavItem[] {
     { to: "/", label: "Dashboard", icon: LayoutDashboard, show: true },
     {
       to: "/entries",
-      label: "Weekly Data Entry",
+      label: "Data Entry",
       icon: ClipboardList,
       show: isTrustHospitalRole(roles) || canEditEntries(roles),
     },

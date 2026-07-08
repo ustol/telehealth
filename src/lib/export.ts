@@ -12,7 +12,7 @@ export const EXPORT_COLUMNS: { key: keyof EntryComputedRow; label: string }[] = 
   { key: "reporting_period", label: "Period" },
   { key: "weekly_cycle", label: "Cycle" },
   { key: "quarter", label: "Quarter" },
-  { key: "patient_full_name", label: "Patient" },
+  { key: "ssnit_number", label: "SSNIT Number" },
   { key: "region", label: "Region" },
   { key: "engagement_type", label: "Engagement Type" },
   { key: "feedback_category", label: "Feedback Category" },

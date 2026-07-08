@@ -41,11 +41,9 @@ export function EntryForm({ defaultValues, existingEntries, onSubmit, submitLabe
   const warnings = computeWarnings(watched);
 
   const isDuplicate = React.useMemo(() => {
-    if (!watched.patient_full_name || !watched.telephone_number) return false;
-    return existingEntries.some(
-      (e) => e.patient_full_name === watched.patient_full_name && e.telephone_number === watched.telephone_number
-    );
-  }, [existingEntries, watched.patient_full_name, watched.telephone_number]);
+    if (!watched.ssnit_number) return false;
+    return existingEntries.some((e) => e.ssnit_number === watched.ssnit_number);
+  }, [existingEntries, watched.ssnit_number]);
 
   if (!lists) return <p className="text-sm text-muted-foreground">Loading configuration…</p>;
 
@@ -127,9 +125,21 @@ export function EntryForm({ defaultValues, existingEntries, onSubmit, submitLabe
         <legend className="text-sm font-semibold text-primary">Patient Information</legend>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div className="space-y-1.5 sm:col-span-2">
-            <Label>Patient Full Name</Label>
-            <Input {...register("patient_full_name")} />
-            {errors.patient_full_name && <p className="text-xs text-destructive">{errors.patient_full_name.message}</p>}
+            <Label>SSNIT Number</Label>
+            <Controller
+              control={control}
+              name="ssnit_number"
+              render={({ field }) => (
+                <Input
+                  maxLength={13}
+                  placeholder="e.g. A123456789012"
+                  value={field.value ?? ""}
+                  onChange={(e) => field.onChange(e.target.value.toUpperCase())}
+                  onBlur={field.onBlur}
+                />
+              )}
+            />
+            {errors.ssnit_number && <p className="text-xs text-destructive">{errors.ssnit_number.message}</p>}
           </div>
           <div className="space-y-1.5">
             <Label>Region</Label>

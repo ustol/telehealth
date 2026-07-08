@@ -53,7 +53,7 @@ reporting_period_id int fk reporting_periods
 weekly_cycle_id int fk weekly_cycles
 date_of_interaction date not null
 cro_name text
-patient_full_name text not null
+ssnit_number text not null                -- check (ssnit_number ~ '^[A-Z][0-9]{12}$')
 telephone_number text
 alternative_contact_number text
 email_address text
@@ -88,7 +88,7 @@ Joins `telemedicine_entries` to every config table (for human-readable labels) a
 
 - `positive_feedback/complaint/suggestion` — `case when feedback_category = 'Positive' then 'Yes' else 'No' end`, etc.
 - `quarter` — `'Q' || ceil(extract(month from date_of_interaction)/3.0) || ' ' || extract(year from date_of_interaction)`
-- `duplicate_flag` — `case when count(*) over (partition by patient_full_name, telephone_number) > 1 then 'DUPLICATE' else null end`
+- `duplicate_flag` — `case when count(*) over (partition by ssnit_number) > 1 then 'DUPLICATE' else null end`
 - `contact_missing` — `case when coalesce(telephone_number,'')='' and coalesce(alternative_contact_number,'')='' and coalesce(email_address,'')='' then 'MISSING CONTACT' else null end`
 - `phone_check` — `case when length(regexp_replace(coalesce(telephone_number,''), '[ +\-]', '', 'g')) < 10 then 'CHECK NUMBER' else null end`
 - `recommendation_sort_key` — within `row_number() over (partition by recommendation order by date_of_interaction, entry_id) = 1` (and `recommendation` non-empty): `(case priority_level when 'High' then 3 when 'Medium' then 2 else 1 end) * 1000000 + extract(epoch from date_of_interaction)::bigint`

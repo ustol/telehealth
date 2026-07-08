@@ -35,7 +35,9 @@ SSNIT users can never edit hospital data unless a System Admin explicitly change
 
 One row per patient interaction. Raw input fields (see `SYSTEM_DESIGN.md` for the full SQL schema and the derived/computed fields kept in a separate view):
 
-entry_id, reporting_period, weekly_cycle, date_of_interaction, cro_name, patient_full_name, telephone_number, alternative_contact_number, email_address, physical_location, region, engagement_type, digital_channel_used, feedback_category, positive_feedback, complaint, suggestion, detailed_feedback_narrative, successful_contact, issue_resolved, escalation_required, key_observation, root_cause, emerging_trend, recommendation, priority_level, responsible_unit, status, quarter, duplicate_flag, contact_missing, phone_check, recommendation_sort_key, observation_sort_key, risk_sort_key, opportunity_sort_key, created_by, updated_by, created_at, updated_at.
+entry_id, reporting_period, weekly_cycle, date_of_interaction, cro_name, ssnit_number, telephone_number, alternative_contact_number, email_address, physical_location, region, engagement_type, digital_channel_used, feedback_category, positive_feedback, complaint, suggestion, detailed_feedback_narrative, successful_contact, issue_resolved, escalation_required, key_observation, root_cause, emerging_trend, recommendation, priority_level, responsible_unit, status, quarter, duplicate_flag, contact_missing, phone_check, recommendation_sort_key, observation_sort_key, risk_sort_key, opportunity_sort_key, created_by, updated_by, created_at, updated_at.
+
+> **Patient identification note**: the workbook's original `patient_full_name` field was replaced with `ssnit_number` (the pensioner's SSNIT number) as the patient identifier — required, exactly 13 characters, a capital letter followed by 12 digits (`^[A-Z][0-9]{12}$`). This is a deliberate deviation from the source workbook, made after go-live at the user's request, since the SSNIT number is a stronger and more privacy-conscious unique identifier than a free-text name.
 
 ## 5. Configuration / Dropdown Lists
 
@@ -58,7 +60,7 @@ Editable by System Admin only, sourced from the workbook's Lists sheet (each is 
 - **entry_id**: sequential `TTH-0001`, `TTH-0002`, … assigned permanently at creation.
 - **positive_feedback / complaint / suggestion**: `Yes` when `feedback_category` equals Positive / Complaint / Suggestion respectively, else `No`.
 - **quarter**: `"Q" & ROUNDUP(MONTH/3) & " " & YEAR` → e.g. `"Q2 2026"` (quarter **and** year combined, not just "Q2").
-- **duplicate_flag**: `DUPLICATE` when the same `(patient_full_name, telephone_number)` pair appears in more than one row.
+- **duplicate_flag**: `DUPLICATE` when the same `ssnit_number` appears in more than one row.
 - **contact_missing**: `MISSING CONTACT` when telephone, alternative contact, and email are all empty.
 - **phone_check**: `CHECK NUMBER` when the telephone number, stripped of spaces/dashes/plus signs, has fewer than 10 digits.
 - **recommendation_sort_key**: set only on the *first* row where a given `recommendation` text occurs; value ranks by priority (High=3, Medium=2, Low=1) first, then by recency. Duplicate occurrences of the same text get no sort key, so "Top N Recommendations" lists never repeat the same text.
@@ -98,7 +100,7 @@ Filter by date range, reporting period, week, month, quarter, region, status, re
 
 ## 8. Validation Rules
 
-- Patient full name required.
+- SSNIT Number is required, exactly 13 characters: a capital letter followed by 12 digits.
 - At least one contact field (telephone, alternative contact, email) required unless deliberately marked unavailable.
 - Reporting period, weekly cycle, date of interaction, region, engagement type, feedback category, and status are required.
 - Priority level required when complaint, escalation, risk, or recommendation is present.

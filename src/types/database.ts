@@ -81,7 +81,7 @@ export interface Database {
           weekly_cycle_id: number | null;
           date_of_interaction: string;
           cro_name: string | null;
-          patient_full_name: string;
+          ssnit_number: string;
           telephone_number: string | null;
           alternative_contact_number: string | null;
           email_address: string | null;
@@ -115,7 +115,7 @@ export interface Database {
           weekly_cycle_id?: number | null;
           date_of_interaction: string;
           cro_name?: string | null;
-          patient_full_name: string;
+          ssnit_number: string;
           telephone_number?: string | null;
           alternative_contact_number?: string | null;
           email_address?: string | null;

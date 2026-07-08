@@ -42,7 +42,7 @@ export function EntryTable({ data, onRowClick }: EntryTableProps) {
       },
       { accessorKey: "reporting_period", header: "Period" },
       { accessorKey: "weekly_cycle", header: "Cycle" },
-      { accessorKey: "patient_full_name", header: "Patient" },
+      { accessorKey: "ssnit_number", header: "SSNIT Number" },
       { accessorKey: "region", header: "Region" },
       { accessorKey: "engagement_type", header: "Engagement Type" },
       { accessorKey: "feedback_category", header: "Feedback" },

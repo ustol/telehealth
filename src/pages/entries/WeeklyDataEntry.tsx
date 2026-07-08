@@ -47,7 +47,7 @@ export default function WeeklyDataEntry() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Weekly Data Entry</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Data Entry</h1>
           <p className="text-muted-foreground">Capture telemedicine interactions for SSNIT pensioners.</p>
         </div>
         {canEdit && (

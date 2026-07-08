@@ -7,7 +7,14 @@ const baseEntryObject = z.object({
   date_of_interaction: z.string().min(1, "Date of interaction is required"),
   cro_name: z.string().optional(),
 
-  patient_full_name: z.string().min(1, "Patient full name is required"),
+  ssnit_number: z
+    .string()
+    .min(1, "SSNIT Number is required")
+    .length(13, "SSNIT Number must be exactly 13 characters")
+    .regex(
+      /^[A-Z][0-9]{12}$/,
+      "SSNIT Number must start with a capital letter followed by 12 digits"
+    ),
   telephone_number: z.string().optional(),
   alternative_contact_number: z.string().optional(),
   email_address: z.string().email("Invalid email address").optional().or(z.literal("")),

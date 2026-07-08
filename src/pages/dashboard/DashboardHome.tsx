@@ -10,7 +10,7 @@ export default function DashboardHome() {
   const cards = [
     {
       to: "/entries",
-      title: "Weekly Data Entry",
+      title: "Data Entry",
       description: "Capture telemedicine interactions for SSNIT pensioners.",
       icon: ClipboardList,
       show: isTrustHospitalRole(roles) || canEditEntries(roles),

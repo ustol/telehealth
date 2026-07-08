@@ -138,7 +138,7 @@ create table public.telemedicine_entries (
   date_of_interaction date not null,
   cro_name text,
 
-  patient_full_name text not null,
+  ssnit_number text not null check (ssnit_number ~ '^[A-Z][0-9]{12}$'),
   telephone_number text,
   alternative_contact_number text,
   email_address text,
@@ -174,7 +174,7 @@ create index idx_entries_period on public.telemedicine_entries (reporting_period
 create index idx_entries_cycle on public.telemedicine_entries (weekly_cycle_id);
 create index idx_entries_institution on public.telemedicine_entries (institution_id);
 create index idx_entries_date on public.telemedicine_entries (date_of_interaction);
-create index idx_entries_dup_key on public.telemedicine_entries (patient_full_name, telephone_number);
+create index idx_entries_dup_key on public.telemedicine_entries (ssnit_number);
 
 -- ============================================================================
 -- 4. report_snapshots & audit_logs
@@ -353,7 +353,7 @@ select
   'Q' || ceil(extract(month from b.date_of_interaction) / 3.0)::int
       || ' ' || extract(year from b.date_of_interaction)::int as quarter,
   case
-    when count(*) over (partition by b.patient_full_name, coalesce(b.telephone_number, '')) > 1
+    when count(*) over (partition by b.ssnit_number) > 1
     then 'DUPLICATE'
   end as duplicate_flag,
   case
