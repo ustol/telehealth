@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Users, Activity, MessageSquareWarning, CheckCircle2, CircleDot, CheckCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { KpiCard } from "@/components/dashboard/KpiCard";
@@ -42,12 +43,12 @@ export default function ExecutiveDashboard() {
       ) : (
         <>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-            <KpiCard label="Total Patients Contacted" value={data.kpis.total_patients_contacted} />
-            <KpiCard label="Total Follow-Up Activities" value={data.kpis.total_followup_activities} />
-            <KpiCard label="Total Complaints" value={data.kpis.total_complaints} />
-            <KpiCard label="Issues Resolved" value={data.kpis.issues_resolved} />
-            <KpiCard label="Open Issues" value={data.kpis.open_issues} />
-            <KpiCard label="Closed Issues" value={data.kpis.closed_issues} />
+            <KpiCard label="Total Patients Contacted" value={data.kpis.total_patients_contacted} icon={Users} />
+            <KpiCard label="Total Follow-Up Activities" value={data.kpis.total_followup_activities} icon={Activity} />
+            <KpiCard label="Total Complaints" value={data.kpis.total_complaints} icon={MessageSquareWarning} tone="warning" />
+            <KpiCard label="Issues Resolved" value={data.kpis.issues_resolved} icon={CheckCircle2} tone="success" />
+            <KpiCard label="Open Issues" value={data.kpis.open_issues} icon={CircleDot} tone="warning" />
+            <KpiCard label="Closed Issues" value={data.kpis.closed_issues} icon={CheckCircle} tone="success" />
           </div>
 
           <div className="grid gap-4 lg:grid-cols-2">

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import type { ExecutiveDashboard } from "@/types/domain";
 
-export function useExecutiveDashboard(year?: number) {
+export function useExecutiveDashboard(year?: number, opts?: { enabled?: boolean }) {
   return useQuery({
     queryKey: ["executive-dashboard", year],
     queryFn: async (): Promise<ExecutiveDashboard> => {
@@ -10,5 +10,6 @@ export function useExecutiveDashboard(year?: number) {
       if (error) throw error;
       return data as unknown as ExecutiveDashboard;
     },
+    enabled: opts?.enabled ?? true,
   });
 }
