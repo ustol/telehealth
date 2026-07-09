@@ -8,7 +8,7 @@ import {
   useReactTable,
   type SortingState,
 } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, Eye, Pencil, Trash2 } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -17,7 +17,11 @@ import type { EntryComputedRow } from "@/hooks/useEntries";
 
 interface EntryTableProps {
   data: EntryComputedRow[];
-  onRowClick?: (row: EntryComputedRow) => void;
+  canEdit?: boolean;
+  canDelete?: boolean;
+  onView: (row: EntryComputedRow) => void;
+  onEdit?: (row: EntryComputedRow) => void;
+  onDelete?: (row: EntryComputedRow) => void;
 }
 
 function SortableHeader({ label, column }: { label: string; column: { toggleSorting: (desc?: boolean) => void; getIsSorted: () => false | "asc" | "desc" } }) {
@@ -29,7 +33,7 @@ function SortableHeader({ label, column }: { label: string; column: { toggleSort
   );
 }
 
-export function EntryTable({ data, onRowClick }: EntryTableProps) {
+export function EntryTable({ data, canEdit, canDelete, onView, onEdit, onDelete }: EntryTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([{ id: "date_of_interaction", desc: true }]);
 
   const columns = React.useMemo<ColumnDef<EntryComputedRow>[]>(
@@ -79,8 +83,35 @@ export function EntryTable({ data, onRowClick }: EntryTableProps) {
           );
         },
       },
+      {
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }) => (
+          <div className="flex items-center gap-1">
+            <Button variant="ghost" size="icon" className="h-8 w-8" title="View" onClick={() => onView(row.original)}>
+              <Eye className="h-4 w-4" />
+            </Button>
+            {canEdit && (
+              <Button variant="ghost" size="icon" className="h-8 w-8" title="Edit" onClick={() => onEdit?.(row.original)}>
+                <Pencil className="h-4 w-4" />
+              </Button>
+            )}
+            {canDelete && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                title="Delete"
+                onClick={() => onDelete?.(row.original)}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+        ),
+      },
     ],
-    []
+    [canEdit, canDelete, onView, onEdit, onDelete]
   );
 
   const table = useReactTable({
@@ -112,7 +143,7 @@ export function EntryTable({ data, onRowClick }: EntryTableProps) {
           <TableBody>
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} className="cursor-pointer" onClick={() => onRowClick?.(row.original)}>
+                <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                   ))}

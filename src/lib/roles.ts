@@ -17,6 +17,20 @@ export function canEditEntries(roles: RoleName[]): boolean {
   return roles.includes("Trust Hospital Admin") || roles.includes("Trust Hospital Data Entry Officer");
 }
 
+// Broader than canEditEntries: the entries_update RLS policy also allows
+// System Admin to correct existing rows, though System Admin cannot create
+// new ones (no entries_insert grant).
+export function canModifyEntries(roles: RoleName[]): boolean {
+  return canEditEntries(roles) || isSystemAdmin(roles);
+}
+
+// Narrower than canModifyEntries: fn_guard_soft_delete only allows Trust
+// Hospital Admin or System Admin to flip is_deleted — a Data Entry Officer
+// can edit a row's fields but cannot delete it.
+export function canDeleteEntries(roles: RoleName[]): boolean {
+  return roles.includes("Trust Hospital Admin") || isSystemAdmin(roles);
+}
+
 export function canReviewEntries(roles: RoleName[]): boolean {
   return roles.includes("Trust Hospital Reviewer") || roles.includes("Trust Hospital Admin");
 }

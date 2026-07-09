@@ -5,8 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { EntryTable } from "@/components/entries/EntryTable";
-import { useEntries } from "@/hooks/useEntries";
+import { EntryDetails } from "@/components/entries/EntryDetails";
+import { useEntries, type EntryComputedRow } from "@/hooks/useEntries";
 import { useConfigList } from "@/hooks/useConfigLists";
 import { exportCsv, exportExcel, exportPdf } from "@/lib/export";
 import { toast } from "@/hooks/use-toast";
@@ -22,6 +24,7 @@ export default function ReportsExport() {
   const { data: feedbackCategories } = useConfigList("feedback_categories");
   const { data: priorityLevels } = useConfigList("priority_levels");
 
+  const [viewing, setViewing] = React.useState<EntryComputedRow | null>(null);
   const [dateFrom, setDateFrom] = React.useState("");
   const [dateTo, setDateTo] = React.useState("");
   const [period, setPeriod] = React.useState(ALL);
@@ -113,9 +116,18 @@ export default function ReportsExport() {
 
       <Card>
         <CardContent className="pt-6">
-          <EntryTable data={filtered} />
+          <EntryTable data={filtered} onView={setViewing} />
         </CardContent>
       </Card>
+
+      <Dialog open={!!viewing} onOpenChange={(o) => !o && setViewing(null)}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>Entry {viewing?.entry_id}</DialogTitle>
+          </DialogHeader>
+          {viewing && <EntryDetails entry={viewing} />}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
